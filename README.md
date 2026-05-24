@@ -4,6 +4,7 @@
 
 Most A/B tests shipped in industry are quietly broken — underpowered, peeked at early, or contaminated by network effects. AB Audit catches those problems before a team ships a decision based on bad data.
 
+[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ab-audit-maneet.streamlit.app/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.x-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
@@ -89,7 +90,7 @@ It is not another p-value calculator. Think of it as an experiment health monito
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/ab-audit.git
+git clone https://github.com/maneet-999/ab-audit.git
 cd ab-audit
 
 # 2. Create a virtual environment (recommended)
@@ -142,29 +143,22 @@ pytest tests/ -v
 ```
 ab_audit/
 ├── engine/
-│   ├── __init__.py          # CheckResult, AuditResult, ExperimentConfig
-│   ├── checks.py            # All 8 validity checks
-│   ├── simulation.py        # Monte Carlo engine (vectorised NumPy)
-│   ├── cuped.py             # CUPED variance reduction
-│   ├── bayesian.py          # Beta-Binomial Bayesian module
-│   ├── data_generator.py    # Synthetic experiment data generator
-│   └── report.py            # PDF report generator
-├── app/
-│   └── streamlit_app.py     # 5-page Streamlit dashboard
+│   ├── __init__.py          # CheckResult, AuditResult, ExperimentConfig dataclasses
+│   ├── checks.py            # All 8 statistical validity checks
+│   ├── cuped.py             # CUPED variance reduction (Deng et al. 2013)
+│   ├── data_generator.py    # Synthetic experiment data for demo scenarios
+│   └── simulation.py        # Monte Carlo peeking engine (vectorised NumPy)
 ├── tests/
 │   ├── test_checks.py       # Unit tests for all 8 checks
-│   ├── test_simulation.py   # Monte Carlo engine tests
-│   └── test_cuped.py        # CUPED implementation tests
+│   └── test_simulation.py   # Monte Carlo engine tests
 ├── docs/
 │   └── screenshots/         # UI screenshots for README
-├── data/                    # Experiment CSVs (gitignored)
-├── paper/
-│   └── reading_guide.md     # Study notes for the 5 core papers
-├── notebooks/               # Exploratory analysis
-├── requirements.txt
-├── .gitignore
-├── CONTRIBUTING.md
-└── README.md
+├── streamlit_app.py         # Main Streamlit dashboard (5 pages)
+├── requirements.txt         # Python dependencies
+├── .gitignore               # Ignores data files, venv, cache, generated PDFs
+├── LICENSE                  # MIT
+├── CONTRIBUTING.md          # Contribution guidelines
+└── README.md                # You are here
 ```
 
 ---
@@ -208,11 +202,11 @@ MIT. See [LICENSE](LICENSE) for details.
 
 ## Contact
 
-**Manee** — Statistics student, University of Delhi
+**Maneet Gupta** — Statistics student, University of Delhi
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [your-linkedin](https://linkedin.com/in/your-linkedin)
-- Email: your@email.com
+- GitHub: [@maneet-999](https://github.com/maneet-999)
+- LinkedIn: [maneet-gupta999](https://www.linkedin.com/in/maneet-gupta999/)
+- Email: 2543maneet@gmail.com
 
 ---
 
