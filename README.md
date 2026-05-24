@@ -15,7 +15,6 @@ Most A/B tests shipped in industry are quietly broken — underpowered, peeked a
 [![Tests](https://img.shields.io/badge/tests-53%20passing-22c55e?style=flat-square)]()
 [![Status](https://img.shields.io/badge/status-active-22c55e?style=flat-square)]()
 
-> Built as a portfolio project by a Statistics student at University of Delhi,
 > demonstrating graduate-level statistical reasoning applied to real industry problems.
 
 ---
