@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Plan — Statistical Validity Audit Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f4ef;
+  --bg2: #ffffff;
+  --bg3: #eeece6;
+  --ink: #1c1b18;
+  --ink2: #5a5850;
+  --ink3: #9a9890;
+  --rule: #dddbd3;
+  --accent: #1c1b18;
+  --green: #1a5c38;
+  --green-bg: #e6f4ed;
+  --amber: #7a4500;
+  --amber-bg: #fff4e0;
+  --red: #8b1a1a;
+  --red-bg: #fdeaea;
+  --blue: #0f3d6e;
+  --blue-bg: #e6f0fb;
+  --purple: #3b1f6e;
+  --purple-bg: #f0ebfb;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Geist',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.7;
+}
+
+/* ── COVER ── */
+.cover{
+  background:var(--ink);
+  color:#f6f4ef;
+  padding:72px 64px 56px;
+  position:relative;
+  overflow:hidden;
+}
+.cover::before{
+  content:'';
+  position:absolute;
+  top:-120px;right:-120px;
+  width:400px;height:400px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:50%;
+}
+.cover::after{
+  content:'';
+  position:absolute;
+  bottom:-80px;left:40px;
+  width:240px;height:240px;
+  border:1px solid rgba(255,255,255,.04);
+  border-radius:50%;
+}
+.cover-meta{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#888;
+  margin-bottom:32px;
+  display:flex;gap:24px;flex-wrap:wrap;
+}
+.cover h1{
+  font-family:'Instrument Serif',serif;
+  font-size:52px;
+  line-height:1.1;
+  color:#f6f4ef;
+  max-width:620px;
+  margin-bottom:24px;
+  font-weight:400;
+}
+.cover-sub{
+  font-size:15px;
+  color:#aaa;
+  max-width:560px;
+  line-height:1.7;
+  margin-bottom:40px;
+}
+.cover-pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  border:1px solid rgba(255,255,255,.15);
+  color:#ccc;
+  padding:5px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-family:'DM Mono',monospace;
+}
+
+/* ── TOC ── */
+.toc{
+  background:var(--bg2);
+  border-bottom:1px solid var(--rule);
+  padding:32px 64px;
+  display:flex;flex-wrap:wrap;gap:6px 24px;
+}
+.toc a{
+  font-size:12px;
+  font-family:'DM Mono',monospace;
+  color:var(--ink2);
+  text-decoration:none;
+  letter-spacing:.04em;
+  padding:4px 0;
+  border-bottom:1px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.toc a:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ── LAYOUT ── */
+.doc{max-width:900px;margin:0 auto;padding:56px 40px}
+section{margin-bottom:72px}
+h2{
+  font-family:'Instrument Serif',serif;
+  font-size:36px;
+  font-weight:400;
+  color:var(--ink);
+  margin-bottom:6px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--rule);
+}
+.section-no{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  color:var(--ink3);
+  text-transform:uppercase;
+  margin-bottom:6px;
+  display:block;
+}
+h3{
+  font-size:15px;
+  font-weight:600;
+  color:var(--ink);
+  margin:28px 0 10px;
+}
+h4{
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink);
+  margin:0 0 6px;
+}
+p{color:var(--ink2);margin-bottom:12px;font-size:14px}
+p strong{color:var(--ink);font-weight:600}
+
+/* ── OBJECTIVE CARDS ── */
+.obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.obj-card{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:18px 20px;
+}
+.obj-card .num{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:var(--ink3);
+  margin-bottom:8px;
+  letter-spacing:.08em;
+}
+.obj-card h4{font-size:14px;margin-bottom:6px}
+.obj-card p{font-size:13px;margin:0}
+
+/* ── DELIVERABLE TABLE ── */
+.del-table{width:100%;border-collapse:collapse;margin:20px 0}
+.del-table th{
+  text-align:left;
+  font-size:11px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  padding:8px 12px;
+  border-bottom:1px solid var(--rule);
+}
+.del-table td{
+  padding:11px 12px;
+  border-bottom:1px solid var(--rule);
+  font-size:13px;
+  color:var(--ink2);
+  vertical-align:top;
+}
+.del-table tr:last-child td{border-bottom:none}
+.del-table td:first-child{font-weight:500;color:var(--ink)}
+.badge{
+  display:inline-block;
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  padding:2px 8px;
+  border-radius:4px;
+  white-space:nowrap;
+}
+.badge.core{background:var(--green-bg);color:var(--green)}
+.badge.stat{background:var(--purple-bg);color:var(--purple)}
+.badge.ui{background:var(--blue-bg);color:var(--blue)}
+.badge.doc{background:var(--amber-bg);color:var(--amber)}
+.badge.high{background:var(--red-bg);color:var(--red)}
+.badge.med{background:var(--amber-bg);color:var(--amber)}
+.badge.low{background:var(--green-bg);color:var(--green)}
+
+/* ── PHASE BLOCKS ── */
+.phase{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:12px;
+  overflow:hidden;
+  margin:20px 0;
+}
+.phase-header{
+  background:var(--ink);
+  color:#f6f4ef;
+  padding:16px 22px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;
+}
+.phase-header h3{
+  font-family:'Instrument Serif',serif;
+  font-size:20px;
+  font-weight:400;
+  color:#f6f4ef;
+  margin:0;
+}
+.phase-header .days{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:#aaa;
+  letter-spacing:.08em;
+}
+.phase-body{padding:0}
+.task{
+  display:grid;
+  grid-template-columns:28px 1fr auto;
+  gap:12px;
+  align-items:flex-start;
+  padding:14px 22px;
+  border-bottom:1px solid var(--rule);
+}
+.task:last-child{border-bottom:none}
+.task-num{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:var(--ink3);
+  padding-top:2px;
+}
+.task-body h4{font-size:13px;margin-bottom:3px}
+.task-body p{font-size:12px;margin:0;color:var(--ink2)}
+.task-body .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.task-meta{
+  font-size:11px;
+  font-family:'DM Mono',monospace;
+  color:var(--ink3);
+  white-space:nowrap;
+  padding-top:2px;
+  text-align:right;
+}
+
+/* ── TIMELINE ── */
+.timeline{margin:24px 0}
+.tl-row{
+  display:grid;
+  grid-template-columns:80px 16px 1fr;
+  gap:0 16px;
+  margin-bottom:0;
+}
+.tl-date{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:var(--ink3);
+  text-align:right;
+  padding-top:3px;
+  letter-spacing:.04em;
+}
+.tl-spine{display:flex;flex-direction:column;align-items:center}
+.tl-dot{
+  width:14px;height:14px;
+  border-radius:50%;
+  border:2px solid var(--ink);
+  background:var(--bg2);
+  flex-shrink:0;
+  margin-top:2px;
+}
+.tl-dot.milestone{background:var(--ink)}
+.tl-line{width:1px;background:var(--rule);flex:1;min-height:40px}
+.tl-content{padding-bottom:28px}
+.tl-content h4{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.tl-content p{font-size:12px;color:var(--ink2);margin:0}
+.tl-content .milestone-label{
+  display:inline-block;
+  background:var(--ink);
+  color:#f6f4ef;
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  padding:2px 8px;
+  border-radius:4px;
+  margin-bottom:4px;
+  letter-spacing:.06em;
+}
+
+/* ── TECH STACK ── */
+.stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.stack-card{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:14px 16px;
+}
+.stack-card .cat{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  margin-bottom:8px;
+}
+.stack-card ul{list-style:none;padding:0}
+.stack-card ul li{
+  font-size:12px;
+  color:var(--ink2);
+  padding:3px 0;
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:6px;
+}
+.stack-card ul li:last-child{border-bottom:none}
+.stack-card ul li::before{content:'';width:5px;height:5px;background:var(--ink3);border-radius:50%;flex-shrink:0}
+
+/* ── STATS TOPICS ── */
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.topic-card{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:16px 18px;
+}
+.topic-card .t-cat{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  margin-bottom:8px;
+}
+.topic-card h4{font-size:13px;margin-bottom:6px}
+.topic-card p{font-size:12px;margin:0}
+.theory-row{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px 0;
+  border-bottom:1px solid var(--rule);
+}
+.theory-row:last-child{border-bottom:none}
+.theory-tag{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  background:var(--purple-bg);
+  color:var(--purple);
+  padding:3px 8px;
+  border-radius:4px;
+  white-space:nowrap;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.theory-body h4{font-size:13px;margin-bottom:2px}
+.theory-body p{font-size:12px;margin:0}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.team-card{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:16px 18px;
+}
+.team-card .role{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  margin-bottom:6px;
+}
+.team-card h4{font-size:14px;font-weight:600;margin-bottom:8px}
+.team-card ul{list-style:none;padding:0}
+.team-card ul li{font-size:12px;color:var(--ink2);padding:3px 0;padding-left:14px;position:relative}
+.team-card ul li::before{content:'—';position:absolute;left:0;color:var(--ink3)}
+
+/* ── RISKS ── */
+.risk-row{
+  display:grid;
+  grid-template-columns:200px 60px 1fr;
+  gap:16px;align-items:start;
+  padding:14px 0;
+  border-bottom:1px solid var(--rule);
+}
+.risk-row:last-child{border-bottom:none}
+.risk-name{font-size:13px;font-weight:500;color:var(--ink)}
+.risk-mit h4{font-size:12px;color:var(--ink3);margin-bottom:3px;font-weight:400}
+.risk-mit p{font-size:12px;margin:0}
+
+/* ── METRICS ── */
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.metric-card{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:10px;
+  padding:14px 16px;
+  text-align:center;
+}
+.metric-card .m-num{
+  font-family:'Instrument Serif',serif;
+  font-size:36px;
+  color:var(--ink);
+  line-height:1;
+  margin-bottom:4px;
+}
+.metric-card .m-label{font-size:11px;color:var(--ink3);margin-bottom:6px}
+.metric-card .m-desc{font-size:12px;color:var(--ink2);line-height:1.5}
+
+/* ── CALLOUTS ── */
+.callout{
+  border-left:3px solid var(--rule);
+  padding:14px 18px;
+  margin:20px 0;
+  border-radius:0 8px 8px 0;
+  background:var(--bg2);
+}
+.callout.warn{border-color:#c97d2a;background:var(--amber-bg)}
+.callout.warn p{color:var(--amber)}
+.callout.info{border-color:#1a5c96;background:var(--blue-bg)}
+.callout.info p{color:var(--blue)}
+.callout.note{border-color:var(--ink3);background:var(--bg2)}
+.callout-label{
+  font-size:10px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+  font-weight:600;
+}
+.callout.warn .callout-label{color:var(--amber)}
+.callout.info .callout-label{color:var(--blue)}
+.callout.note .callout-label{color:var(--ink3)}
+
+/* ── STEP BY STEP ── */
+.steps{margin:20px 0}
+.step{
+  display:flex;gap:18px;align-items:flex-start;
+  padding:16px 0;
+  border-bottom:1px solid var(--rule);
+}
+.step:last-child{border-bottom:none}
+.step-n{
+  font-family:'Instrument Serif',serif;
+  font-size:32px;
+  color:var(--rule);
+  line-height:1;
+  flex-shrink:0;
+  width:36px;
+  text-align:right;
+}
+.step-body h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.step-body p{font-size:13px;color:var(--ink2);margin-bottom:6px}
+.step-body .code{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  background:var(--bg3);
+  color:var(--ink2);
+  padding:8px 12px;
+  border-radius:6px;
+  margin-top:8px;
+  overflow-x:auto;
+  white-space:pre;
+}
+.step-body .sub-steps{
+  list-style:none;padding:0;margin-top:8px;
+}
+.step-body .sub-steps li{
+  font-size:12px;color:var(--ink2);
+  padding:3px 0 3px 16px;
+  position:relative;
+}
+.step-body .sub-steps li::before{content:'→';position:absolute;left:0;color:var(--ink3)}
+
+/* ── FORMULA BOX ── */
+.formula-block{
+  background:var(--bg3);
+  border-radius:8px;
+  padding:14px 18px;
+  margin:10px 0;
+  font-family:'DM Mono',monospace;
+  font-size:12px;
+  color:var(--ink2);
+}
+.formula-block .f-title{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-bottom:8px}
+.formula-block .f-eq{font-size:13px;color:var(--ink);margin-bottom:4px}
+
+@media(max-width:640px){
+  .cover{padding:40px 24px}
+  .cover h1{font-size:32px}
+  .doc{padding:32px 20px}
+  .obj-grid,.topic-grid,.team-grid,.stack-grid,.metric-grid{grid-template-columns:1fr}
+  .risk-row{grid-template-columns:1fr}
+  .toc{padding:20px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-meta">
+    <span>Project Plan v1.0</span>
+    <span>Statistical Validity Audit Engine</span>
+    <span>Duration — 5 Weeks</span>
+    <span>Solo / 2-Person Team</span>
+  </div>
+  <h1>Why Your A/B Test Lied to You</h1>
+  <p class="cover-sub">A complete project plan for building a production-grade statistical validity audit engine — from raw concept to deployed tool, written research paper, and interview-ready demo.</p>
+  <div class="cover-pills">
+    <span class="pill">Python</span>
+    <span class="pill">Streamlit</span>
+    <span class="pill">NumPy / SciPy</span>
+    <span class="pill">Hypothesis Testing</span>
+    <span class="pill">Monte Carlo</span>
+    <span class="pill">CUPED</span>
+    <span class="pill">Power Analysis</span>
+    <span class="pill">5 Weeks</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <a href="#objectives">Objectives</a>
+  <a href="#deliverables">Deliverables</a>
+  <a href="#tech">Tech Stack</a>
+  <a href="#stats">Stats Theory</a>
+  <a href="#tasks">Task Breakdown</a>
+  <a href="#timeline">Timeline</a>
+  <a href="#team">Team Roles</a>
+  <a href="#risks">Risks</a>
+  <a href="#metrics">Success Metrics</a>
+  <a href="#stepbystep">Step-by-Step Process</a>
+</div>
+
+<div class="doc">
+
+<!-- ── SECTION 1: OBJECTIVES ── -->
+<section id="objectives">
+  <span class="section-no">01 — Project Objectives</span>
+  <h2>What We're Building and Why</h2>
+  <p>This project builds a statistical validity audit engine that diagnoses A/B tests for methodological failures before teams make incorrect shipping decisions. The primary goal is to produce a portfolio artifact that demonstrates graduate-level statistical reasoning, not just code.</p>
+
+  <div class="obj-grid">
+    <div class="obj-card">
+      <div class="num">OBJ-01 — Primary</div>
+      <h4>Build a working diagnostic tool</h4>
+      <p>A deployed Streamlit app that audits A/B experiment setups and results across 8 statistical validity checks, returning plain-English verdicts with quantified error consequences.</p>
+    </div>
+    <div class="obj-card">
+      <div class="num">OBJ-02 — Primary</div>
+      <h4>Produce original empirical research</h4>
+      <p>Run 1,000 synthetic experiments with known ground truth. Quantify the percentage that would be incorrectly shipped without the audit. This number is the paper's headline finding.</p>
+    </div>
+    <div class="obj-card">
+      <div class="num">OBJ-03 — Secondary</div>
+      <h4>Write a research-style paper</h4>
+      <p>A full write-up with abstract, methodology, results, and citations — formatted like a conference paper. Publishable on arXiv as a technical report.</p>
+    </div>
+    <div class="obj-card">
+      <div class="num">OBJ-04 — Secondary</div>
+      <h4>Create an interview-ready demo</h4>
+      <p>A scripted 10-minute demo walkthrough of the tool using the Zepto scarcity badge scenario. Every module explained, every violation surfaced, verdict shown live.</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-label">Core Principle</div>
+    <p>Every feature built must connect to a named statistical concept. If a feature cannot be justified by theory, it does not get built. This is what separates a statistics project from a software project.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 2: DELIVERABLES ── -->
+<section id="deliverables">
+  <span class="section-no">02 — Key Deliverables</span>
+  <h2>Exactly What Gets Shipped</h2>
+
+  <table class="del-table">
+    <thead>
+      <tr>
+        <th>Deliverable</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Owner</th>
+        <th>Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Statistical Engine</td>
+        <td><span class="badge core">Core</span></td>
+        <td>Python module with all 8 validity checks implemented from scratch — no black-box wrappers. Each check returns a structured result object with test statistic, p-value, verdict, and cost of violation.</td>
+        <td>Stats Lead</td>
+        <td>Week 2</td>
+      </tr>
+      <tr>
+        <td>Monte Carlo Simulator</td>
+        <td><span class="badge stat">Stat</span></td>
+        <td>Vectorized simulation engine running 10,000 experiments in under 5 seconds. Produces empirical false positive rate, power curves, and peeking inflation curves.</td>
+        <td>Stats Lead</td>
+        <td>Week 2</td>
+      </tr>
+      <tr>
+        <td>CUPED Implementation</td>
+        <td><span class="badge stat">Stat</span></td>
+        <td>Full variance reduction via pre-experiment covariate. Takes two dataframes (pre and experiment data), returns adjusted estimates and comparison of CI width before/after.</td>
+        <td>Stats Lead</td>
+        <td>Week 3</td>
+      </tr>
+      <tr>
+        <td>Streamlit App</td>
+        <td><span class="badge ui">UI</span></td>
+        <td>Multi-page app: Experiment Designer, Validity Audit, Peeking Simulator, CUPED Engine, Report Card. Deployed on Streamlit Cloud with 3 preloaded demo scenarios.</td>
+        <td>Dev Lead</td>
+        <td>Week 4</td>
+      </tr>
+      <tr>
+        <td>Report Generator</td>
+        <td><span class="badge ui">UI</span></td>
+        <td>Auto-generates a downloadable PDF experiment report. Looks like an actual company experiment readout — executive summary, methodology, results, recommendation.</td>
+        <td>Dev Lead</td>
+        <td>Week 4</td>
+      </tr>
+      <tr>
+        <td>Research Paper</td>
+        <td><span class="badge doc">Doc</span></td>
+        <td>6–10 page LaTeX paper. Abstract, introduction, background, methodology, simulation results, discussion, references. Cites Johari 2015, Deng 2013, Kohavi 2020.</td>
+        <td>Stats Lead</td>
+        <td>Week 5</td>
+      </tr>
+      <tr>
+        <td>GitHub Repository</td>
+        <td><span class="badge doc">Doc</span></td>
+        <td>Clean repo with professional README, module documentation, example notebooks, and badge showing live Streamlit deployment link.</td>
+        <td>Dev Lead</td>
+        <td>Week 5</td>
+      </tr>
+      <tr>
+        <td>Demo Script</td>
+        <td><span class="badge doc">Doc</span></td>
+        <td>A word-for-word 10-minute interview demo script. Scripted narration for every module, with expected interviewer questions and prepared answers.</td>
+        <td>Both</td>
+        <td>Week 5</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── SECTION 3: TECH STACK ── -->
+<section id="tech">
+  <span class="section-no">03 — Technology Stack</span>
+  <h2>Languages, Libraries, and Tools</h2>
+
+  <div class="stack-grid">
+    <div class="stack-card">
+      <div class="cat">Core Language</div>
+      <ul>
+        <li>Python 3.11+</li>
+        <li>Type hints throughout</li>
+        <li>Dataclasses for results</li>
+        <li>Pytest for unit tests</li>
+      </ul>
+    </div>
+    <div class="stack-card">
+      <div class="cat">Statistics</div>
+      <ul>
+        <li>NumPy — all core math</li>
+        <li>SciPy.stats — validation only</li>
+        <li>Statsmodels — regression</li>
+        <li>Pingouin — nonparametric</li>
+      </ul>
+    </div>
+    <div class="stack-card">
+      <div class="cat">Data Handling</div>
+      <ul>
+        <li>Pandas — data frames</li>
+        <li>Polars — fast simulation data</li>
+        <li>Faker — synthetic data gen</li>
+        <li>CSV / Parquet I/O</li>
+      </ul>
+    </div>
+    <div class="stack-card">
+      <div class="cat">Visualization</div>
+      <ul>
+        <li>Plotly — interactive charts</li>
+        <li>Matplotlib — paper figures</li>
+        <li>Altair — declarative charts</li>
+        <li>Seaborn — stat plots</li>
+      </ul>
+    </div>
+    <div class="stack-card">
+      <div class="cat">Frontend / App</div>
+      <ul>
+        <li>Streamlit — main UI</li>
+        <li>Streamlit Cloud — deploy</li>
+        <li>ReportLab — PDF reports</li>
+        <li>Jinja2 — templates</li>
+      </ul>
+    </div>
+    <div class="stack-card">
+      <div class="cat">Dev & Docs</div>
+      <ul>
+        <li>Git + GitHub</li>
+        <li>Overleaf / LaTeX — paper</li>
+        <li>Jupyter — notebooks</li>
+        <li>Black + Ruff — linting</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout note">
+    <div class="callout-label">Implementation Rule</div>
+    <p>The statistical engine must implement all core tests from scratch using NumPy. SciPy is used only to validate our implementations match ground truth — not as the primary implementation. This is what you tell interviewers when they ask how deep your understanding goes.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 4: STATS THEORY ── -->
+<section id="stats">
+  <span class="section-no">04 — Statistical Theory Used</span>
+  <h2>The Academic Foundation</h2>
+  <p>Every module maps directly to formal statistical theory. This section is your study guide — the concepts you must deeply understand before building each check.</p>
+
+  <div class="topic-grid">
+    <div class="topic-card">
+      <div class="t-cat">Hypothesis Testing Core</div>
+      <h4>Null / Alternative Hypotheses</h4>
+      <p>H₀: p₁ = p₂ (no effect). H₁: p₁ ≠ p₂ (effect exists). Two-tailed tests throughout. Understanding directional vs. non-directional hypotheses. Rejection region derivation.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Error Types</div>
+      <h4>Type I & Type II Errors</h4>
+      <p>α = P(reject H₀ | H₀ true) = false positive rate. β = P(fail to reject H₀ | H₁ true) = false negative rate. Power = 1 − β. The core tradeoff the entire tool is built around.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Sampling Theory</div>
+      <h4>Central Limit Theorem</h4>
+      <p>Why sample proportions are approximately normal for large n. The foundation for z-tests on proportions. When CLT breaks down (small n, extreme proportions) and why you need Fisher's exact test.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Power Analysis</div>
+      <h4>Sample Size Determination</h4>
+      <p>Deriving n = 2(z_α/2 + z_β)² p(1−p) / δ² from first principles. Minimum detectable effect. How power collapses as baseline rate approaches 0 or 1. Effect size (Cohen's h).</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Multiple Testing</div>
+      <h4>Family-Wise Error Rate</h4>
+      <p>FWER = 1−(1−α)^k inflation. Bonferroni correction: αᵢ = α/k. Benjamini-Hochberg procedure for False Discovery Rate control. When to use which correction and why.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Sequential Testing</div>
+      <h4>Optional Stopping Problem</h4>
+      <p>Why checking p < 0.05 repeatedly inflates Type I error. Sequential Probability Ratio Test (SPRT). Always-valid p-values (Johari et al. 2015). Spending functions for error control.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Nonparametric</div>
+      <h4>Distribution-Free Tests</h4>
+      <p>When metric distributions violate normality. Shapiro-Wilk test. Mann-Whitney U as t-test alternative. Levene's test for variance homogeneity. Welch's t-test for unequal variances.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Variance Reduction</div>
+      <h4>CUPED Method</h4>
+      <p>Controlled-experiment Using Pre-Experiment Data. Covariate adjustment: Ỹ = Y − θX where θ = Cov(Y,X)/Var(X). Reduces variance of treatment effect estimator without bias. Equivalence to OLS residuals.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Goodness of Fit</div>
+      <h4>Sample Ratio Mismatch</h4>
+      <p>Chi-square test on observed vs. expected assignment counts. H₀: randomization worked. Detecting pipeline bugs before they corrupt results. Chi-square distribution properties.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Causal Inference</div>
+      <h4>SUTVA & Network Effects</h4>
+      <p>Stable Unit Treatment Value Assumption. When social features violate independence. Cluster randomization as the correct design. Interference detection heuristics.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Bayesian Methods</div>
+      <h4>Beta-Binomial Conjugate Model</h4>
+      <p>Prior: Beta(α, β). Posterior: Beta(α + successes, β + failures). Credible intervals vs. confidence intervals. Probability that treatment beats control: P(p₂ > p₁). Why Bayesian allows peeking without the same penalty.</p>
+    </div>
+    <div class="topic-card">
+      <div class="t-cat">Simulation Theory</div>
+      <h4>Monte Carlo Methods</h4>
+      <p>Law of Large Numbers justifying empirical estimates. Generating Bernoulli and Normal random variables. Variance of Monte Carlo estimator. Why 10,000 simulations gives stable estimates.</p>
+    </div>
+  </div>
+
+  <h3>Theoretical References — What to Read</h3>
+  <div style="background:var(--bg2);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;margin:16px 0">
+    <div class="theory-row">
+      <div class="theory-tag">Sequential</div>
+      <div class="theory-body">
+        <h4>Johari, Pekelis & Walsh (2015) — Always Valid Inference</h4>
+        <p>The peeking problem paper. Derives always-valid p-values using mixture sequential probability ratio tests. Core theory for Module 6.</p>
+      </div>
+    </div>
+    <div class="theory-row">
+      <div class="theory-tag">CUPED</div>
+      <div class="theory-body">
+        <h4>Deng, Xu, Kohavi & Walker (2013) — Improving Sensitivity via Pre-Experiment Data</h4>
+        <p>The original CUPED paper from Microsoft Research. Derive the covariate adjustment estimator and its variance reduction properties.</p>
+      </div>
+    </div>
+    <div class="theory-row">
+      <div class="theory-tag">Industry</div>
+      <div class="theory-body">
+        <h4>Kohavi, Tang & Xu (2020) — Trustworthy Online Controlled Experiments</h4>
+        <p>The definitive industry textbook. Chapters on SRM, multiple testing, novelty effects, and experiment design. Read chapters 3, 5, 8, and 19.</p>
+      </div>
+    </div>
+    <div class="theory-row">
+      <div class="theory-tag">Classical</div>
+      <div class="theory-body">
+        <h4>Fisher (1935) — The Design of Experiments</h4>
+        <p>Foundational. Read the first three chapters. Citing Fisher signals you understand the historical foundation, not just the applied version.</p>
+      </div>
+    </div>
+    <div class="theory-row">
+      <div class="theory-tag">Multiple</div>
+      <div class="theory-body">
+        <h4>Benjamini & Hochberg (1995) — Controlling the False Discovery Rate</h4>
+        <p>The BH procedure paper. Read the original — it's short (12 pages). Understand the step-up procedure. Required for Module 5.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 5: TASK BREAKDOWN ── -->
+<section id="tasks">
+  <span class="section-no">05 — Task Breakdown</span>
+  <h2>Every Task, Phased and Ordered</h2>
+
+  <!-- PHASE 0 -->
+  <div class="phase">
+    <div class="phase-header">
+      <h3>Phase 0 — Setup & Architecture</h3>
+      <div class="days">Days 1–3</div>
+    </div>
+    <div class="task">
+      <div class="task-num">0.1</div>
+      <div class="task-body">
+        <h4>Create GitHub repository with professional structure</h4>
+        <p>Folders: /engine, /app, /data, /tests, /paper, /notebooks. Add .gitignore, requirements.txt, README skeleton, MIT license.</p>
+        <div class="tags"><span class="badge doc">Setup</span></div>
+      </div>
+      <div class="task-meta">2 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">0.2</div>
+      <div class="task-body">
+        <h4>Define result dataclass schema for all 8 checks</h4>
+        <p>Each check returns: CheckResult(name, passed, statistic, p_value, verdict_text, cost_of_violation, recommendation). Define this before writing any logic — it locks the API contract.</p>
+        <div class="tags"><span class="badge core">Architecture</span></div>
+      </div>
+      <div class="task-meta">3 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">0.3</div>
+      <div class="task-body">
+        <h4>Build synthetic data generator</h4>
+        <p>Function that generates realistic experiment data given: baseline rate, true lift, n per arm, optional SRM bug, optional randomization seed. Used for all testing and the research simulation study.</p>
+        <div class="tags"><span class="badge stat">Stats</span></div>
+      </div>
+      <div class="task-meta">4 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">0.4</div>
+      <div class="task-body">
+        <h4>Read core papers — Johari 2015, Deng 2013, Kohavi Ch.3/5/8</h4>
+        <p>Do not skip this. You cannot explain what you've built in an interview if you've only read summaries. Take notes on the key equations you'll implement.</p>
+        <div class="tags"><span class="badge doc">Research</span></div>
+      </div>
+      <div class="task-meta">8 hrs</div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <h3>Phase 1 — Statistical Engine (8 Checks)</h3>
+      <div class="days">Days 4–11</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.1</div>
+      <div class="task-body">
+        <h4>Check 1 — Sample Ratio Mismatch (SRM)</h4>
+        <p>Chi-square goodness-of-fit on assignment counts. H₀: split matches expected ratio. Compute statistic, p-value, flag if p &lt; 0.01. Cost: "CI is X% wider than valid. True effect range: [L, U]."</p>
+        <div class="tags"><span class="badge stat">Chi-square</span><span class="badge core">Check 1</span></div>
+      </div>
+      <div class="task-meta">4 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.2</div>
+      <div class="task-body">
+        <h4>Check 2 — Minimum Sample Size / Power</h4>
+        <p>Implement exact power formula for proportions from NumPy. Compute achieved power given observed n. Flag if power &lt; 0.80. Cost: "X% chance you missed a real effect of this size."</p>
+        <div class="tags"><span class="badge stat">Power Analysis</span><span class="badge core">Check 2</span></div>
+      </div>
+      <div class="task-meta">5 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.3</div>
+      <div class="task-body">
+        <h4>Check 3 — Variance Homogeneity (for continuous metrics)</h4>
+        <p>Levene's test on group variances. If failed, switch from pooled t-test to Welch's correction automatically. Show user what changed and why.</p>
+        <div class="tags"><span class="badge stat">Levene / Welch</span><span class="badge core">Check 3</span></div>
+      </div>
+      <div class="task-meta">4 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.4</div>
+      <div class="task-body">
+        <h4>Check 4 — Normality Assessment</h4>
+        <p>Shapiro-Wilk on both arms. If n &lt; 30 and normality rejected, offer Mann-Whitney U as alternative. Display Q-Q plot. Explain why the choice of test matters for validity.</p>
+        <div class="tags"><span class="badge stat">Shapiro-Wilk</span><span class="badge core">Check 4</span></div>
+      </div>
+      <div class="task-meta">4 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.5</div>
+      <div class="task-body">
+        <h4>Check 5 — Multiple Testing Correction</h4>
+        <p>Compute FWER = 1−(1−α)^k. Apply Bonferroni (αᵢ = α/k) and BH step-up procedure. Show corrected p-value thresholds and how many results flip from significant to not.</p>
+        <div class="tags"><span class="badge stat">FWER / FDR</span><span class="badge core">Check 5</span></div>
+      </div>
+      <div class="task-meta">5 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.6</div>
+      <div class="task-body">
+        <h4>Check 6 — Peeking / Optional Stopping Detection</h4>
+        <p>Ask user for peeking frequency. Run Monte Carlo: 5,000 simulations of a null experiment. Compute empirical false positive rate under their peeking strategy. Generate p-value trajectory animation.</p>
+        <div class="tags"><span class="badge stat">Monte Carlo</span><span class="badge core">Check 6</span></div>
+      </div>
+      <div class="task-meta">6 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.7</div>
+      <div class="task-body">
+        <h4>Check 7 — Novelty Effect Detection</h4>
+        <p>Fit a linear regression of daily treatment effect on time (day index). If slope is significantly negative (declining lift), flag probable novelty effect. Show day-by-day effect plot with confidence band.</p>
+        <div class="tags"><span class="badge stat">Time Series</span><span class="badge core">Check 7</span></div>
+      </div>
+      <div class="task-meta">5 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.8</div>
+      <div class="task-body">
+        <h4>Check 8 — SUTVA / Network Effect Flag</h4>
+        <p>Structured questionnaire about product type. If social, referral, or communication feature detected, auto-flag SUTVA violation risk. Link to cluster randomization explanation. No statistical test — this is expert heuristic logic.</p>
+        <div class="tags"><span class="badge stat">Causal Inference</span><span class="badge core">Check 8</span></div>
+      </div>
+      <div class="task-meta">3 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">1.9</div>
+      <div class="task-body">
+        <h4>Unit tests for all 8 checks</h4>
+        <p>Each check tested with: (a) known passing case, (b) known failing case, (c) edge case (n=0, p=0, equal groups). Validate against SciPy ground truth. Target: 90%+ coverage.</p>
+        <div class="tags"><span class="badge doc">Testing</span></div>
+      </div>
+      <div class="task-meta">6 hrs</div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <h3>Phase 2 — Simulation & CUPED</h3>
+      <div class="days">Days 12–18</div>
+    </div>
+    <div class="task">
+      <div class="task-num">2.1</div>
+      <div class="task-body">
+        <h4>Monte Carlo simulation engine</h4>
+        <p>Vectorized NumPy implementation — no Python loops. Generate n_simulations × n_timesteps matrix of experiment results. Compute empirical power, Type I rate, peeking inflation. Target: 10,000 sims in under 3 seconds.</p>
+        <div class="tags"><span class="badge stat">Monte Carlo</span><span class="badge core">Performance</span></div>
+      </div>
+      <div class="task-meta">8 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">2.2</div>
+      <div class="task-body">
+        <h4>Research simulation study — 1,000 experiments</h4>
+        <p>Generate 1,000 synthetic experiments. Each randomly assigned 1–3 violations. Record ground truth (was there a real effect?). Run the audit. Compute: what % of invalid experiments would have been shipped? This is your paper's main result.</p>
+        <div class="tags"><span class="badge stat">Research</span><span class="badge doc">Paper</span></div>
+      </div>
+      <div class="task-meta">10 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">2.3</div>
+      <div class="task-body">
+        <h4>CUPED engine implementation</h4>
+        <p>Implement: θ = Cov(Y_pre, Y_exp) / Var(Y_pre). Compute adjusted metric: Ỹ = Y − θ × (X − X̄). Estimate treatment effect on adjusted metric. Show variance reduction ratio: Var(Ỹ)/Var(Y). Generate before/after CI comparison plot.</p>
+        <div class="tags"><span class="badge stat">CUPED</span><span class="badge core">Variance Reduction</span></div>
+      </div>
+      <div class="task-meta">7 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">2.4</div>
+      <div class="task-body">
+        <h4>Bayesian A/B module (Beta-Binomial)</h4>
+        <p>Prior: Beta(1,1) uniform. Update posterior for each arm. Compute P(treatment beats control) via Monte Carlo integration. Plot posterior distributions. Show credible interval vs. frequentist CI comparison.</p>
+        <div class="tags"><span class="badge stat">Bayesian</span></div>
+      </div>
+      <div class="task-meta">6 hrs</div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <h3>Phase 3 — Streamlit Application</h3>
+      <div class="days">Days 19–28</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.1</div>
+      <div class="task-body">
+        <h4>Page 1 — Experiment Designer</h4>
+        <p>User inputs: metric type, baseline rate, MDE, alpha, power target, daily traffic, planned duration. Tool computes: required n, min duration, power curve plot. Returns Pass/Warn/Fail for plan validity before running anything.</p>
+        <div class="tags"><span class="badge ui">Streamlit</span></div>
+      </div>
+      <div class="task-meta">6 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.2</div>
+      <div class="task-body">
+        <h4>Page 2 — Validity Audit (core page)</h4>
+        <p>CSV uploader for raw experiment data. Runs all 8 checks sequentially with progress bar. Each check expands to show: test statistic, p-value, verdict, cost of violation, recommendation. Final verdict banner: Valid / Caution / Invalid.</p>
+        <div class="tags"><span class="badge ui">Streamlit</span><span class="badge core">Core</span></div>
+      </div>
+      <div class="task-meta">10 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.3</div>
+      <div class="task-body">
+        <h4>Page 3 — Peeking Simulator (interactive demo)</h4>
+        <p>Sliders for peeking frequency, n, alpha. Button: "Run 5,000 simulations." Live Plotly chart showing p-value trajectories for 20 sample experiments. False positive rate counter updating in real time.</p>
+        <div class="tags"><span class="badge ui">Streamlit</span><span class="badge stat">Monte Carlo</span></div>
+      </div>
+      <div class="task-meta">8 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.4</div>
+      <div class="task-body">
+        <h4>Page 4 — CUPED Engine</h4>
+        <p>Upload pre-experiment + experiment CSVs. Shows: variance reduction %, new CI width, comparison chart, "equivalent to N additional users" translation. One-paragraph CUPED explanation below results.</p>
+        <div class="tags"><span class="badge ui">Streamlit</span><span class="badge stat">CUPED</span></div>
+      </div>
+      <div class="task-meta">6 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.5</div>
+      <div class="task-body">
+        <h4>Page 5 — Report Card + PDF Export</h4>
+        <p>Visual report card: one row per check, Pass/Warn/Fail indicators, overall verdict. "Download Report" button generates a PDF with: experiment metadata, all check results, visualizations, recommendation. Looks like a real company experiment readout.</p>
+        <div class="tags"><span class="badge ui">Streamlit</span><span class="badge doc">Output</span></div>
+      </div>
+      <div class="task-meta">8 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.6</div>
+      <div class="task-body">
+        <h4>Load 3 prebuilt demo scenarios</h4>
+        <p>Scenario A: Zepto scarcity badge — passes most checks, fails peeking. Scenario B: Fintech cashback test — SRM detected, underpowered. Scenario C: EdTech notification — all checks pass, clean result. One-click load for each.</p>
+        <div class="tags"><span class="badge ui">Demo</span></div>
+      </div>
+      <div class="task-meta">4 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">3.7</div>
+      <div class="task-body">
+        <h4>Deploy to Streamlit Cloud</h4>
+        <p>Push to GitHub. Connect Streamlit Cloud. Add secrets management for any API keys. Test all pages on deployed version. Get the public URL — this goes in your LinkedIn and resume immediately.</p>
+        <div class="tags"><span class="badge ui">Deploy</span></div>
+      </div>
+      <div class="task-meta">3 hrs</div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <h3>Phase 4 — Research Paper & Documentation</h3>
+      <div class="days">Days 29–35</div>
+    </div>
+    <div class="task">
+      <div class="task-num">4.1</div>
+      <div class="task-body">
+        <h4>Write research paper in LaTeX (Overleaf)</h4>
+        <p>Sections: Abstract, Introduction, Background & Related Work, Methodology, Simulation Study, Results, Discussion, Conclusion, References. Target: 6–8 pages, ACM or IEEE double-column format.</p>
+        <div class="tags"><span class="badge doc">LaTeX</span><span class="badge doc">Research</span></div>
+      </div>
+      <div class="task-meta">16 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">4.2</div>
+      <div class="task-body">
+        <h4>Write professional GitHub README</h4>
+        <p>Sections: project banner, one-line description, demo GIF, features list, installation, usage, architecture diagram, theory overview, references, license. Use Shields.io badges. Add live Streamlit link prominently.</p>
+        <div class="tags"><span class="badge doc">GitHub</span></div>
+      </div>
+      <div class="task-meta">4 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">4.3</div>
+      <div class="task-body">
+        <h4>Write interview demo script</h4>
+        <p>10-minute scripted walkthrough. Minute-by-minute: intro (1 min), Experiment Designer (2 min), Validity Audit with Scenario A (4 min), Peeking Simulator live demo (2 min), wrap + CUPED mention (1 min). Anticipate top 5 interviewer questions and prepare answers.</p>
+        <div class="tags"><span class="badge doc">Interview</span></div>
+      </div>
+      <div class="task-meta">3 hrs</div>
+    </div>
+    <div class="task">
+      <div class="task-num">4.4</div>
+      <div class="task-body">
+        <h4>Add to LinkedIn and resume — immediately</h4>
+        <p>Add project to LinkedIn Experience section on day of Streamlit deployment. Update resume with: tool name, one-sentence description, tech stack, link. Do not wait for the paper to be done. The deployed app is enough to list.</p>
+        <div class="tags"><span class="badge doc">Career</span></div>
+      </div>
+      <div class="task-meta">1 hr</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 6: TIMELINE ── -->
+<section id="timeline">
+  <span class="section-no">06 — Timeline & Milestones</span>
+  <h2>5-Week Execution Schedule</h2>
+
+  <div class="timeline">
+    <div class="tl-row">
+      <div class="tl-date">Week 1<br>Days 1–7</div>
+      <div class="tl-spine"><div class="tl-dot milestone"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="milestone-label">Milestone 1</div>
+        <h4>Architecture locked, all 8 checks implemented</h4>
+        <p>Repo set up. Data generator done. CheckResult schema locked. All 8 validity checks passing unit tests. Paper reading complete. No UI yet — pure Python module.</p>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-date">Week 2<br>Days 8–14</div>
+      <div class="tl-spine"><div class="tl-dot milestone"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="milestone-label">Milestone 2</div>
+        <h4>Simulation engine and CUPED complete</h4>
+        <p>Monte Carlo engine vectorized and benchmarked. Research simulation study run — headline result computed. CUPED implementation validated against Deng 2013 equations. Bayesian module done.</p>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-date">Week 3<br>Days 15–21</div>
+      <div class="tl-spine"><div class="tl-dot milestone"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="milestone-label">Milestone 3</div>
+        <h4>Streamlit app Pages 1–3 functional</h4>
+        <p>Experiment Designer, Validity Audit, and Peeking Simulator all working locally. Demo scenarios A and B loadable. No deployment yet — local testing only. First internal demo run.</p>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-date">Week 4<br>Days 22–28</div>
+      <div class="tl-spine"><div class="tl-dot milestone"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="milestone-label">Milestone 4 — Critical</div>
+        <h4>App deployed. LinkedIn updated. Applications sent.</h4>
+        <p>All 5 pages live on Streamlit Cloud. PDF report working. All 3 demo scenarios loadable. GitHub README published. LinkedIn project section updated same day. First batch of internship applications sent with project link.</p>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-date">Week 5<br>Days 29–35</div>
+      <div class="tl-spine"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <h4>Research paper draft complete</h4>
+        <p>Full LaTeX paper drafted. Abstract and results section finalized. Interview demo script written and rehearsed. Paper submitted to arXiv (optional but recommended — gives you a citable link).</p>
+      </div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-date">Ongoing<br>Week 6+</div>
+      <div class="tl-spine"><div class="tl-dot"></div></div>
+      <div class="tl-content">
+        <h4>Iterate based on interview feedback</h4>
+        <p>Add features interviewers ask about. If CUPED is consistently brought up, deepen that module. If peeking simulator gets the best reactions, make it even more visual. The tool evolves with your interview experience.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">Non-Negotiable Deadline</div>
+    <p>The Streamlit app must be deployed by the end of Week 4 — regardless of polish level. A live URL on your LinkedIn is worth more than a perfect app nobody can see. Ship first, polish second.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 7: TEAM ROLES ── -->
+<section id="team">
+  <span class="section-no">07 — Team Roles & Responsibilities</span>
+  <h2>Who Does What</h2>
+  <p>This project is designed for a solo builder. If you have a second person, split by the roles below. If solo, you own both — but mentally separate the roles to avoid context-switching chaos.</p>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="role">Role 1</div>
+      <h4>Statistics Lead</h4>
+      <ul>
+        <li>Implements all 8 validity checks from scratch</li>
+        <li>Owns the Monte Carlo simulation engine</li>
+        <li>Implements CUPED and Bayesian module</li>
+        <li>Runs the research simulation study</li>
+        <li>Writes the research paper (all sections)</li>
+        <li>Validates implementations against SciPy</li>
+        <li>Owns the theory — can explain every formula</li>
+        <li>Writes the interview demo script</li>
+      </ul>
+    </div>
+    <div class="team-card">
+      <div class="role">Role 2</div>
+      <h4>Dev / Product Lead</h4>
+      <ul>
+        <li>Builds all 5 Streamlit pages</li>
+        <li>Integrates statistical engine into UI</li>
+        <li>Builds the PDF report generator</li>
+        <li>Loads and formats the 3 demo scenarios</li>
+        <li>Deploys to Streamlit Cloud</li>
+        <li>Writes and maintains GitHub README</li>
+        <li>Builds synthetic data generator</li>
+        <li>Sets up testing infrastructure</li>
+      </ul>
+    </div>
+    <div class="team-card">
+      <div class="role">If Solo — Priority Order</div>
+      <h4>What to build first when time is short</h4>
+      <ul>
+        <li>First: Checks 1, 2, 6 (SRM, Power, Peeking)</li>
+        <li>Second: Monte Carlo simulator</li>
+        <li>Third: Streamlit Pages 1 and 2</li>
+        <li>Fourth: Deploy with 1 demo scenario</li>
+        <li>Fifth: CUPED and remaining checks</li>
+        <li>Sixth: Paper and full documentation</li>
+        <li>A 3-check version deployed beats a 8-check version unpublished</li>
+      </ul>
+    </div>
+    <div class="team-card">
+      <div class="role">Advisor (Optional)</div>
+      <h4>Professor / Senior Mentor</h4>
+      <ul>
+        <li>Review statistical correctness of checks</li>
+        <li>Provide feedback on paper methodology</li>
+        <li>Recommend additional references</li>
+        <li>Co-author or acknowledge in paper</li>
+        <li>Potentially open door to IIT research internship</li>
+        <li>Show them the tool — ask for 30 mins feedback</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 8: RISKS ── -->
+<section id="risks">
+  <span class="section-no">08 — Risks & Mitigation</span>
+  <h2>What Can Go Wrong and How to Handle It</h2>
+
+  <div style="background:var(--bg2);border:1px solid var(--rule);border-radius:10px;padding:16px 20px;margin:20px 0">
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">Scope creep — building too many features</div>
+        <span class="badge high">High risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>Lock scope at end of Phase 0. Any new feature proposed after Day 3 goes into a "backlog" file — not the build. The 8 checks are fixed. Nothing gets added until all 8 are done and deployed.</p>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">Statistical implementation bugs</div>
+        <span class="badge high">High risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>Every check is unit tested against SciPy's equivalent function with identical inputs. If our output differs by more than 1e-6, there is a bug. Never trust your implementation without this cross-validation step.</p>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">Monte Carlo too slow for UI</div>
+        <span class="badge med">Med risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>Use vectorized NumPy from day one — no Python loops in the simulation. Add st.cache_data decorator on heavy computation. If still slow, add a progress bar and async loading. Target: 10,000 sims in under 5 seconds.</p>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">CUPED derivation is incorrect</div>
+        <span class="badge med">Med risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>Validate CUPED output against a manual OLS regression on the same data — they should produce identical adjusted estimates. Cross-check variance reduction ratio with the Deng 2013 formula. If they match, the implementation is correct.</p>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">Paper not written — only the app ships</div>
+        <span class="badge med">Med risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>Write the paper abstract and methodology section in Week 2, not Week 5. The paper is much easier to write once the simulation results exist. Set a 2-hour block every day in Week 5 exclusively for paper writing.</p>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">Deployment issues on Streamlit Cloud</div>
+        <span class="badge low">Low risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>Test deployment on Day 22 — not Day 28. Leave 3 days buffer for debugging dependency issues. Pin all library versions in requirements.txt. Have a Hugging Face Spaces backup deployment ready if Streamlit fails.</p>
+      </div>
+    </div>
+    <div class="risk-row">
+      <div>
+        <div class="risk-name">No users — nobody discovers the tool</div>
+        <span class="badge low">Low risk</span>
+      </div>
+      <div></div>
+      <div class="risk-mit">
+        <h4>Mitigation</h4>
+        <p>On deployment day: post on LinkedIn with a clear problem statement ("Most A/B tests are statistically invalid — here's a tool to catch it before you ship"). Tag 3–5 data science communities. Post in r/datascience. The topic is inherently shareable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 9: SUCCESS METRICS ── -->
+<section id="metrics">
+  <span class="section-no">09 — Success Metrics</span>
+  <h2>How You Know It Worked</h2>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="m-num">8/8</div>
+      <div class="m-label">Validity checks passing all unit tests</div>
+      <div class="m-desc">Every check has a pass, fail, and edge case test. Zero fails against SciPy ground truth.</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-num">&lt;5s</div>
+      <div class="m-label">10,000 Monte Carlo simulations runtime</div>
+      <div class="m-desc">Vectorized NumPy implementation. Measured on a standard laptop CPU.</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-num">3</div>
+      <div class="m-label">Demo scenarios loadable in the live app</div>
+      <div class="m-desc">Zepto badge, fintech cashback, EdTech notification. One-click load, full audit output.</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-num">1</div>
+      <div class="m-label">Live Streamlit URL on LinkedIn by Week 4</div>
+      <div class="m-desc">The non-negotiable delivery. A deployed URL that any recruiter can click and use.</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-num">6pg</div>
+      <div class="m-label">Research paper with original simulation results</div>
+      <div class="m-desc">Minimum viable paper — abstract, methodology, simulation study results, discussion, 5+ references.</div>
+    </div>
+    <div class="metric-card">
+      <div class="m-num">10min</div>
+      <div class="m-label">Scripted interview demo, rehearsed 3× times</div>
+      <div class="m-desc">Run the demo three times before your first technical interview. Smooth, confident, zero stumbles.</div>
+    </div>
+  </div>
+
+  <h3>The Internship Success Signal</h3>
+  <p>The project has succeeded when an interviewer — without prompting — says some version of: <em>"This is really interesting, can you walk me through how the peeking simulator works?"</em> or <em>"I didn't know CUPED could reduce required sample size that much."</em> Those reactions mean the project has done its job of making a senior data professional take you seriously.</p>
+
+  <div class="callout info">
+    <div class="callout-label">Final Standard</div>
+    <p>The project is complete when a senior data scientist at a product company could use this tool in their actual job. Not a demo. Not a tutorial exercise. A real tool that catches real mistakes. Hold every feature to that standard.</p>
+  </div>
+</section>
+
+<!-- ── SECTION 10: STEP BY STEP ── -->
+<section id="stepbystep">
+  <span class="section-no">10 — Step-by-Step Process</span>
+  <h2>Exactly What to Do, In Order</h2>
+  <p>This is the execution sequence you follow from Day 1. No ambiguity. No decisions to defer. Open this section every morning and do the next step.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <h4>Create the project repository and folder structure</h4>
+        <p>Run these exact commands. Everything else lives inside this structure.</p>
+        <div class="code">mkdir ab_audit && cd ab_audit
+git init
+mkdir engine app data tests paper notebooks
+touch engine/__init__.py engine/checks.py engine/simulation.py
+touch engine/cuped.py engine/bayesian.py engine/report.py
+touch app/streamlit_app.py requirements.txt README.md .gitignore</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <h4>Define the CheckResult dataclass before writing any logic</h4>
+        <p>This is the contract everything else is built around. Lock it on Day 1.</p>
+        <div class="code">from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class CheckResult:
+    name: str
+    passed: bool
+    severity: str          # "pass" | "warn" | "fail"
+    statistic: float
+    p_value: Optional[float]
+    verdict: str           # one plain-English sentence
+    cost_of_violation: str # what it means if this fails
+    recommendation: str    # what to do about it</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <h4>Build the synthetic data generator with known ground truth</h4>
+        <p>This is used for testing every check and for the research simulation study.</p>
+        <ul class="sub-steps">
+          <li>Parameters: p_control, true_lift, n_per_arm, srm_bug=False, seed=42</li>
+          <li>Returns: DataFrame with columns [user_id, arm, converted, day, pre_metric]</li>
+          <li>SRM bug option: assign 55% to control instead of 50% when srm_bug=True</li>
+          <li>Validate: confirm simulated p_control matches target within 2 percentage points</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <h4>Read the papers — in this order, with notes</h4>
+        <ul class="sub-steps">
+          <li>Day 1: Kohavi 2020 — Chapters 3 (SRM), 5 (Multiple Testing), 8 (novelty effects)</li>
+          <li>Day 2: Deng et al. 2013 — CUPED. Copy the θ formula into your notebook.</li>
+          <li>Day 3: Johari et al. 2015 — Always Valid Inference. Understand the SPRT derivation at a high level.</li>
+          <li>Day 3: Benjamini & Hochberg 1995 — The BH procedure. It is 12 pages. Read all of it.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">5</div>
+      <div class="step-body">
+        <h4>Implement Check 1 (SRM) first — it is the simplest and validates your structure</h4>
+        <p>Use this to prove the CheckResult pattern works end-to-end before building 7 more checks.</p>
+        <div class="code">def check_srm(n_control, n_treatment, expected_ratio=0.5) -> CheckResult:
+    n_total = n_control + n_treatment
+    expected_control = n_total * expected_ratio
+    expected_treatment = n_total * (1 - expected_ratio)
+    chi2 = ((n_control - expected_control)**2 / expected_control +
+            (n_treatment - expected_treatment)**2 / expected_treatment)
+    p_val = 1 - scipy.stats.chi2.cdf(chi2, df=1)
+    passed = p_val > 0.01
+    return CheckResult(
+        name="Sample Ratio Mismatch",
+        passed=passed,
+        severity="pass" if passed else "fail",
+        statistic=round(chi2, 4),
+        p_value=round(p_val, 4),
+        verdict="Randomization looks clean." if passed else
+                f"SRM detected (p={p_val:.4f}). Assignment split is {n_control/n_total:.1%}/{n_treatment/n_total:.1%} instead of 50/50.",
+        cost_of_violation="Your confidence intervals are unreliable. The observed split suggests a bug in your randomization pipeline. Results cannot be trusted.",
+        recommendation="Do not ship based on this result. Investigate your randomization code." if not passed else "Proceed."
+    )</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">6</div>
+      <div class="step-body">
+        <h4>Implement all remaining checks (2–8), one per day</h4>
+        <ul class="sub-steps">
+          <li>Day 5: Check 2 — Power Analysis (implement normal CDF from scratch using error function)</li>
+          <li>Day 6: Check 3 — Variance homogeneity (Levene's test → Welch correction if failed)</li>
+          <li>Day 7: Check 4 — Normality (Shapiro-Wilk + Mann-Whitney fallback)</li>
+          <li>Day 8: Check 5 — Multiple testing (FWER computation + BH procedure)</li>
+          <li>Day 9: Check 6 — Peeking (Monte Carlo false positive simulation)</li>
+          <li>Day 10: Check 7 — Novelty effect (linear regression on daily lift)</li>
+          <li>Day 11: Check 8 — SUTVA questionnaire logic</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">7</div>
+      <div class="step-body">
+        <h4>Write unit tests for all 8 checks before moving to Phase 2</h4>
+        <ul class="sub-steps">
+          <li>For each check: test_passes_when_valid(), test_fails_when_violated(), test_edge_case()</li>
+          <li>Run: pytest tests/ -v — all green before proceeding</li>
+          <li>Cross-validate numeric outputs against SciPy with assert abs(ours - scipy) &lt; 1e-6</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">8</div>
+      <div class="step-body">
+        <h4>Build the Monte Carlo engine — vectorized, no loops</h4>
+        <div class="code">def simulate_peeking(n_per_arm, p_control, p_treatment,
+                     n_simulations=10_000, check_days=[1,3,5,7]) -> dict:
+    # Generate all simulations at once — shape: (n_simulations, max_day)
+    control_data = np.random.binomial(n_per_arm, p_control,
+                                      size=(n_simulations, max(check_days)))
+    treat_data = np.random.binomial(n_per_arm, p_treatment,
+                                    size=(n_simulations, max(check_days)))
+    # Compute p-values at each checkpoint — fully vectorized
+    # Return: false_positive_rate_by_day, power_by_day, trajectory_sample</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">9</div>
+      <div class="step-body">
+        <h4>Run the research simulation study and record your headline result</h4>
+        <ul class="sub-steps">
+          <li>Generate 1,000 experiments using your synthetic data generator</li>
+          <li>Randomly assign 0–3 violations to each experiment (record ground truth)</li>
+          <li>Run the full audit on each experiment</li>
+          <li>Compute: % of experiments that were invalid but would have been shipped as significant</li>
+          <li>This number — probably between 35–55% — is the opening line of your paper's abstract</li>
+          <li>Save results to data/simulation_study_results.csv</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">10</div>
+      <div class="step-body">
+        <h4>Build the Streamlit app — Page 2 (Validity Audit) first</h4>
+        <p>This is the core page. Everything else is secondary. Get this working with real data before touching any other page.</p>
+        <ul class="sub-steps">
+          <li>st.file_uploader() for two CSVs (control, treatment)</li>
+          <li>Run all 8 checks on upload. Show st.spinner() while computing.</li>
+          <li>Display each CheckResult in an st.expander() — closed by default</li>
+          <li>Final verdict: st.success() / st.warning() / st.error() banner</li>
+          <li>Test with your synthetic data generator before deploying</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">11</div>
+      <div class="step-body">
+        <h4>Build remaining pages (1, 3, 4, 5) and load demo scenarios</h4>
+        <ul class="sub-steps">
+          <li>Page 1: Experiment Designer — sliders, power calculator, duration check</li>
+          <li>Page 3: Peeking Simulator — Plotly chart, live false positive counter</li>
+          <li>Page 4: CUPED Engine — two file uploaders, before/after CI chart</li>
+          <li>Page 5: Report Card + PDF download button</li>
+          <li>Sidebar: scenario loader buttons for all 3 prebuilt demos</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">12</div>
+      <div class="step-body">
+        <h4>Deploy to Streamlit Cloud — this happens on Day 25 at the latest</h4>
+        <ul class="sub-steps">
+          <li>Push to GitHub main branch</li>
+          <li>Go to share.streamlit.io → New app → connect repo</li>
+          <li>Set main file path: app/streamlit_app.py</li>
+          <li>Wait for build (~3 minutes). Debug any import errors.</li>
+          <li>Copy the public URL immediately</li>
+          <li>Add it to your GitHub README badge, LinkedIn profile, and resume same day</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">13</div>
+      <div class="step-body">
+        <h4>Write the research paper — abstract first, then results, then everything else</h4>
+        <ul class="sub-steps">
+          <li>Abstract (Day 29): 150 words. State the problem, method, and your headline simulation result.</li>
+          <li>Results (Day 30): Tables and figures from the simulation study. These already exist — just format them.</li>
+          <li>Methodology (Day 31): Each check described with its statistical test, null hypothesis, and implementation decision.</li>
+          <li>Introduction and Background (Day 32): Literature review, motivation, related work.</li>
+          <li>Discussion and Conclusion (Day 33): What the results mean, limitations, future work.</li>
+          <li>References (Day 33): All 5 core papers properly cited in BibTeX.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">14</div>
+      <div class="step-body">
+        <h4>Rehearse the interview demo three times before your first technical interview</h4>
+        <ul class="sub-steps">
+          <li>Open the live Streamlit URL — not localhost</li>
+          <li>Load Scenario A (Zepto scarcity badge). Walk through it out loud.</li>
+          <li>Time it. It should be 8–12 minutes. Cut if longer.</li>
+          <li>Have a friend or peer ask you "how does CUPED work?" — answer without looking at notes</li>
+          <li>Have them ask "why does peeking inflate false positives?" — same requirement</li>
+          <li>If you can answer both fluently, you are interview-ready on this project</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">The Most Important Thing Not In This Plan</div>
+    <p><strong>Apply to internships starting on Day 22 — the day the app deploys.</strong> Don't wait for the paper. Don't wait for perfection. A live URL, a GitHub repo, and a great README is sufficient to start applications. The paper makes it better. The deployed tool makes it real. Real beats perfect every single time.</p>
+  </div>
+
+</section>
+
+</div>
+
+<div style="background:var(--ink);color:#f6f4ef;padding:32px 64px;text-align:center">
+  <div style="font-family:'DM Mono',monospace;font-size:11px;color:#666;margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase">Statistical Validity Audit Engine — Project Plan v1.0</div>
+  <div style="font-family:'Instrument Serif',serif;font-size:20px;color:#aaa">Ship the deployed app. Then improve it. Never the other way around.</div>
+</div>
+
+</body>
+</html>
