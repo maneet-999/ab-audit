@@ -4,14 +4,20 @@
 
 Most A/B tests shipped in industry are quietly broken — underpowered, peeked at early, or contaminated by network effects. AB Audit catches those problems before a team ships a decision based on bad data.
 
-[![Live Demo](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ab-audit-maneet.streamlit.app/)
+---
+<p align="center">
+  <a href="https://ab-audit-maneet.streamlit.app/" target="_blank">
+    <img src="https://img.shields.io/badge/🚀%20%20Try%20Live%20Demo-%20%20ab--audit--maneet.streamlit.app%20%20-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Live Demo" height="40"/>
+  </a>
+</p>
+
+
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.x-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-53%20passing-22c55e?style=flat-square)]()
 [![Status](https://img.shields.io/badge/status-active-22c55e?style=flat-square)]()
 
-> Built as a portfolio project by a Statistics student at University of Delhi,
 > demonstrating graduate-level statistical reasoning applied to real industry problems.
 
 ---

@@ -15,7 +15,7 @@ Thanks for your interest. Here's how to contribute without breaking things.
 ## Setup
 
 ```bash
-git clone https://github.com/yourusername/ab-audit.git
+git clone https://github.com/maneet-999/ab-audit.git
 cd ab-audit
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
