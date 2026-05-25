@@ -20,6 +20,7 @@ from engine.simulation import (
     run_peeking_simulation, simulate_null_trajectories,
 )
 from engine.cuped import run_cuped_analysis
+from engine.bayesian import run_bayesian_ab, bayesian_sequential, bayesian_from_dataframe
 from engine.data_generator import load_scenario
 
 # ══════════════════════════════════════════════════════════════
@@ -48,7 +49,7 @@ st.set_page_config(
     page_title="AB Audit",
     page_icon="AB",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
 # ══════════════════════════════════════════════════════════════
@@ -68,48 +69,37 @@ html, body,
     color: {TXT} !important;
 }}
 
-/* ── Hide ALL streamlit chrome completely ─────────────── */
-#MainMenu,
+/* ── Hide only clutter, keep header/toolbar visible ────── */
 footer,
-[data-testid="stHeader"],
 [data-testid="stDecoration"],
-[data-testid="stToolbar"],
-[data-testid="stStatusWidget"],
-[data-testid="manage-app-button"],
-.stDeployButton {{
+[data-testid="stStatusWidget"] {{
     display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
 }}
 
-/* ── Hide sidebar collapse/expand toggle permanently ─── */
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"],
-button[aria-label="Close sidebar"],
-button[kind="header"] {{
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-}}
 
-/* ── Force sidebar always visible and non-collapsible ── */
-[data-testid="stSidebar"] {{
-    transform: none !important;
-    visibility: visible !important;
-    display: flex !important;
+
+
+/* ── Sidebar width (expanded only) ── */
+[data-testid="stSidebar"][aria-expanded="true"] {{
     width: 16rem !important;
     min-width: 16rem !important;
     max-width: 16rem !important;
 }}
-
-/* ── Remove top padding gap that header normally creates ─ */
-[data-testid="stAppViewContainer"] {{
-    padding-top: 0 !important;
+[data-testid="stSidebar"][aria-expanded="false"] {{
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    overflow: hidden !important;
 }}
-[data-testid="stMain"] {{
-    padding-top: 0 !important;
+
+/* ── Main content fills full width when sidebar collapsed ── */
+[data-testid="stSidebar"][aria-expanded="false"] ~ [data-testid="stAppViewContainer"],
+[data-testid="stSidebar"][aria-expanded="false"] ~ * [data-testid="stAppViewContainer"] {{
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}}
+section.main > div {{
+    transition: margin-left .3s ease !important;
 }}
 
 /* ── SIDEBAR ─────────────────────────────────────────── */
@@ -336,6 +326,31 @@ div[class*="StyledThumb"] {{
     max-width: 1400px !important;
 }}
 </style>
+""", unsafe_allow_html=True)
+
+# ── Sidebar collapse: force main content to fill full width ──
+st.markdown("""
+<script>
+(function() {
+    function fixLayout() {
+        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        const main    = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+        if (!sidebar || !main) return;
+        const collapsed = sidebar.getAttribute('aria-expanded') === 'false';
+        main.style.marginLeft  = collapsed ? '0px' : '';
+        main.style.paddingLeft = collapsed ? '0px' : '';
+        main.style.width       = collapsed ? '100vw' : '';
+    }
+    // Run on load
+    setTimeout(fixLayout, 300);
+    // Watch for changes
+    const obs = new MutationObserver(fixLayout);
+    setTimeout(() => {
+        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        if (sidebar) obs.observe(sidebar, { attributes: true, attributeFilter: ['aria-expanded'] });
+    }, 500);
+})();
+</script>
 """, unsafe_allow_html=True)
 
 
@@ -917,6 +932,155 @@ elif page == "Validity Audit":
                         if check.p_value is not None:
                             st.metric("p-value", f"{check.p_value:.4f}")
                         st.metric("statistic", f"{check.statistic:.4f}")
+
+            # ── BAYESIAN ANALYSIS ──────────────────────────────────
+            st.markdown("<div style='height:1.2rem'></div>", unsafe_allow_html=True)
+            section_label("Bayesian Analysis", BLUE)
+            st.markdown(
+                f'<p style="font-size:12px;color:{TXT2};margin:0 0 1rem;">Instead of asking '
+                f'"is p &lt; 0.05?", the Bayesian model asks: given the data, what is the '
+                f'probability treatment is actually better? You can look at this any day '
+                f'without inflating error.</p>',
+                unsafe_allow_html=True,
+            )
+
+            bay_cols = st.columns([1, 1, 1], gap="small")
+            with bay_cols[0]:
+                b_alpha = st.number_input("Prior α", min_value=0.1, max_value=10.0,
+                                          value=1.0, step=0.5,
+                                          help="Beta prior shape. 1 = uniform (no prior belief).")
+            with bay_cols[1]:
+                b_beta  = st.number_input("Prior β", min_value=0.1, max_value=10.0,
+                                          value=1.0, step=0.5)
+            with bay_cols[2]:
+                b_threshold = st.slider("Ship threshold", 0.80, 0.99, 0.95, 0.01,
+                                        help="P(treatment > control) required to recommend shipping.")
+
+            if st.button("Run Bayesian Analysis", use_container_width=False):
+                with st.spinner("Sampling posteriors..."):
+                    b_res = bayesian_from_dataframe(
+                        df, alpha_prior=b_alpha, beta_prior=b_beta
+                    )
+                    b_seq = bayesian_sequential(
+                        df, alpha_prior=b_alpha, beta_prior=b_beta
+                    ) if "day" in df.columns else None
+                    st.session_state["bay_result"] = b_res
+                    st.session_state["bay_seq"]    = b_seq
+
+            if "bay_result" in st.session_state:
+                b_res = st.session_state["bay_result"]
+                b_seq = st.session_state["bay_seq"]
+
+                # KPI strip
+                prob_color = MINT if b_res.prob_treatment_better >= b_threshold else \
+                             CORAL if b_res.prob_treatment_better < 0.50 else YELLOW
+                bk1, bk2, bk3 = st.columns(3, gap="small")
+                bk1.metric("P(treatment > control)",
+                           f"{b_res.prob_treatment_better:.1%}")
+                bk2.metric("Expected lift",
+                           f"{b_res.expected_lift*100:+.3f} pp")
+                bk3.metric("95% Credible interval",
+                           f"[{b_res.credible_interval[0]*100:+.2f}, "
+                           f"{b_res.credible_interval[1]*100:+.2f}] pp")
+
+                # Decision banner
+                dec_color = MINT if b_res.prob_treatment_better >= b_threshold else \
+                            CORAL if b_res.prob_treatment_better < (1 - b_threshold) else YELLOW
+                st.markdown(f"""
+                <div style="background:{dec_color}12;border:1.5px solid {dec_color}33;
+                            border-radius:12px;padding:1rem 1.4rem;margin:.8rem 0 1.2rem;">
+                    <span style="font-size:13px;color:{TXT};line-height:1.7;">
+                        {_clean(b_res.decision)}
+                    </span>
+                </div>""", unsafe_allow_html=True)
+
+                ch1, ch2 = st.columns(2, gap="medium")
+
+                # Posterior distributions
+                with ch1:
+                    section_label("Posterior Distributions", BLUE)
+                    fig_post = go.Figure()
+                    fig_post.add_trace(go.Histogram(
+                        x=b_res.posterior_samples_control,
+                        name="Control", nbinsx=60,
+                        marker_color=CORAL, opacity=0.65,
+                        histnorm="probability density",
+                    ))
+                    fig_post.add_trace(go.Histogram(
+                        x=b_res.posterior_samples_treatment,
+                        name="Treatment", nbinsx=60,
+                        marker_color=MINT, opacity=0.65,
+                        histnorm="probability density",
+                    ))
+                    fig_post.update_layout(barmode="overlay", showlegend=True,
+                                          xaxis_title="Conversion rate",
+                                          yaxis_title="Density")
+                    _chart(fig_post, 260)
+                    st.plotly_chart(fig_post, use_container_width=True,
+                                    config={"displayModeBar": False})
+
+                # Lift distribution
+                with ch2:
+                    section_label("Lift Distribution", PURPLE)
+                    fig_lift = go.Figure()
+                    fig_lift.add_trace(go.Histogram(
+                        x=[v * 100 for v in b_res.lift_samples],
+                        nbinsx=60, marker_color=PURPLE, opacity=0.8,
+                        histnorm="probability density", name="Lift",
+                    ))
+                    fig_lift.add_vline(x=0, line_color=CORAL, line_dash="dash",
+                                       line_width=1.5,
+                                       annotation_text="no effect",
+                                       annotation_font_color=CORAL,
+                                       annotation_font_size=11)
+                    fig_lift.add_vline(x=b_res.expected_lift * 100,
+                                       line_color=MINT, line_dash="dot", line_width=1.5,
+                                       annotation_text=f"E[lift] = {b_res.expected_lift*100:+.2f} pp",
+                                       annotation_font_color=MINT,
+                                       annotation_font_size=11)
+                    fig_lift.update_layout(xaxis_title="Lift (pp)", yaxis_title="Density",
+                                           showlegend=False)
+                    _chart(fig_lift, 260)
+                    st.plotly_chart(fig_lift, use_container_width=True,
+                                    config={"displayModeBar": False})
+
+                # Sequential probability curve
+                if b_seq is not None:
+                    section_label("Sequential Probability (day by day)", MINT)
+                    st.markdown(
+                        f'<p style="font-size:11px;color:{TXT2};margin:0 0 .6rem;">'
+                        f'Unlike frequentist p-values, this curve is valid to inspect '
+                        f'at any point. No error inflation from daily monitoring.</p>',
+                        unsafe_allow_html=True,
+                    )
+                    fig_seq = go.Figure()
+                    fig_seq.add_hrect(y0=b_threshold, y1=1.0,
+                                      fillcolor=MINT, opacity=0.06,
+                                      line_width=0)
+                    fig_seq.add_hline(y=b_threshold, line_color=MINT,
+                                      line_dash="dash", line_width=1.2,
+                                      annotation_text=f"ship threshold ({b_threshold:.0%})",
+                                      annotation_font_color=MINT, annotation_font_size=11)
+                    fig_seq.add_hline(y=0.5, line_color=TXT2,
+                                      line_dash="dot", line_width=1,
+                                      annotation_text="50%", annotation_font_size=10)
+                    fig_seq.add_trace(go.Scatter(
+                        x=b_seq.days,
+                        y=[v * 100 for v in b_seq.prob_better_by_day],
+                        mode="lines+markers",
+                        line=dict(color=BLUE, width=2),
+                        marker=dict(size=5, color=BLUE),
+                        fill="tozeroy", fillcolor="rgba(96,165,250,0.09)",
+                        name="P(treatment better)",
+                    ))
+                    fig_seq.update_layout(
+                        xaxis_title="Day",
+                        yaxis_title="P(treatment > control) %",
+                        yaxis=dict(range=[0, 105]),
+                    )
+                    _chart(fig_seq, 280)
+                    st.plotly_chart(fig_seq, use_container_width=True,
+                                    config={"displayModeBar": False})
 
 
 # ══════════════════════════════════════════════════════════════
