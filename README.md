@@ -150,7 +150,8 @@ pytest tests/ -v
 ab_audit/
 ├── engine/
 │   ├── __init__.py          # CheckResult, AuditResult, ExperimentConfig dataclasses
-│   ├── checks.py            # All 8 statistical validity checks
+│   ├── bayesian.py          # Bayesian Analysis
+|   ├── checks.py            # All 8 statistical validity checks
 │   ├── cuped.py             # CUPED variance reduction (Deng et al. 2013)
 │   ├── data_generator.py    # Synthetic experiment data for demo scenarios
 │   └── simulation.py        # Monte Carlo peeking engine (vectorised NumPy)
