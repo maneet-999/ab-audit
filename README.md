@@ -68,8 +68,6 @@ It is not another p-value calculator. Think of it as an experiment health monito
 | CUPED Engine | ![CUPED](docs/screenshots/cuped.png) |
 | Experiment Designer | ![Designer](docs/screenshots/designer.png) |
 
-> Add screenshots to `docs/screenshots/` after first run.
-
 ---
 
 ## Tech Stack
