@@ -21,6 +21,7 @@ from engine.simulation import (
 )
 from engine.cuped import run_cuped_analysis
 from engine.bayesian import run_bayesian_ab, bayesian_sequential, bayesian_from_dataframe
+from engine.report import generate_report, generate_markdown
 from engine.data_generator import load_scenario
 
 # ══════════════════════════════════════════════════════════════
@@ -848,6 +849,7 @@ elif page == "Validity Audit":
                     "is_comms_feature": is_comms,
                 })
                 st.session_state["last_audit"] = audit
+                st.session_state["last_cfg"]   = cfg
 
         if "last_audit" in st.session_state:
             audit  = st.session_state["last_audit"]
@@ -869,6 +871,42 @@ elif page == "Validity Audit":
                     {_clean(audit.overall_verdict)}
                 </p>
             </div>""", unsafe_allow_html=True)
+
+            # Download buttons
+            _cfg        = st.session_state.get("last_cfg")
+            _bay        = st.session_state.get("bay_result")
+            _cuped      = st.session_state.get("cuped_result")
+            _fname_base = (_cfg.name or "report").lower().replace(" ", "_")
+            dl1, dl2, dl3 = st.columns([1, 1, 4], gap="small")
+            with dl1:
+                try:
+                    import reportlab
+                except ImportError:
+                    import subprocess, sys
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", "reportlab", "-q"])
+                try:
+                    pdf_bytes = generate_report(audit, _cfg, _bay, _cuped)
+                    if pdf_bytes[:4] == b"%PDF":
+                        st.download_button(
+                            label="Download PDF",
+                            data=pdf_bytes,
+                            file_name=f"ab_audit_{_fname_base}.pdf",
+                            mime="application/pdf",
+                            use_container_width=True,
+                        )
+                    else:
+                        st.error("PDF generation failed — check reportlab install.")
+                except Exception as e:
+                    st.error(f"PDF error: {e}")
+            with dl2:
+                md_str = generate_markdown(audit, _cfg, _bay, _cuped)
+                st.download_button(
+                    label="Download Markdown",
+                    data=md_str.encode("utf-8"),
+                    file_name=f"ab_audit_{_fname_base}.md",
+                    mime="text/markdown",
+                    use_container_width=True,
+                )
 
             # Meta strip
             m1, m2, m3, m4, m5 = st.columns(5, gap="small")
