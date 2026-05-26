@@ -503,7 +503,7 @@ def generate_markdown(
         "",
         "---",
         "",
-        "*AB Audit v1.0 — github.com/yourusername/ab_audit*",
+        "*AB Audit v1.0 — github.com/maneet-999/ab_audit*",
     ]
 
     return "\n".join(lines)
