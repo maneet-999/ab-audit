@@ -150,6 +150,7 @@ ab_audit/
 |   ├── checks.py            # All 8 statistical validity checks
 │   ├── cuped.py             # CUPED variance reduction (Deng et al. 2013)
 │   ├── data_generator.py    # Synthetic experiment data for demo scenarios
+|   ├── report.py            # create pdf and md report
 │   └── simulation.py        # Monte Carlo peeking engine (vectorised NumPy)
 ├── tests/
 │   ├── test_checks.py       # Unit tests for all 8 checks
