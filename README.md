@@ -2,7 +2,7 @@
 
 **A statistical validity engine for A/B experiments.**
 
-Most A/B tests shipped in industry are quietly broken — underpowered, peeked at early, or contaminated by network effects. AB Audit catches those problems before a team ships a decision based on bad data.
+Most A/B tests shipped in industry are quietly broken - underpowered, peeked at early, or contaminated by network effects. AB Audit catches those problems before a team ships a decision based on bad data.
 
 ---
 <p align="center">
@@ -48,11 +48,11 @@ It is not another p-value calculator. Think of it as an experiment health monito
 
 **Additional modules:**
 
-- **CUPED Engine** — pre-experiment variance reduction (Deng et al. 2013). Typically cuts required sample size by 20-40% at no extra cost.
-- **Peeking Simulator** — watch Type I error inflate live across 10,000 simulated null experiments as you adjust peeking strategy.
-- **Experiment Designer** — sample size and power calculator with duration estimates.
-- **Three prebuilt scenarios** — Zepto (scarcity badge, minor SRM), Fintech (cashback offer, SRM bug), EdTech (notification test, clean result).
-- **PDF report export** — formatted like a real company experiment readout, downloadable in one click.
+- **CUPED Engine** - pre-experiment variance reduction (Deng et al. 2013). Typically cuts required sample size by 20-40% at no extra cost.
+- **Peeking Simulator** - watch Type I error inflate live across 10,000 simulated null experiments as you adjust peeking strategy.
+- **Experiment Designer** - sample size and power calculator with duration estimates.
+- **Three prebuilt scenarios** - Zepto (scarcity badge, minor SRM), Fintech (cashback offer, SRM bug), EdTech (notification test, clean result).
+- **PDF report export** - formatted like a real company experiment readout, downloadable in one click.
 
 ---
 
