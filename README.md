@@ -22,7 +22,7 @@ Most A/B tests shipped in industry are quietly broken — underpowered, peeked a
 
 ## Overview
 
-AB Audit is a five-page diagnostic dashboard that audits experiment setups and results across eight statistical validity checks. It returns plain-English verdicts with quantified error consequences — not just pass/fail flags.
+AB Audit is a five-page diagnostic dashboard that audits experiment setups and results across eight statistical validity checks. It returns plain-English verdicts with quantified error consequences,not just pass/fail flags.
 
 It is not another p-value calculator. Think of it as an experiment health monitor: upload your data, configure your test parameters, and get a structured readout of everything that could be misleading your conclusions.
 
